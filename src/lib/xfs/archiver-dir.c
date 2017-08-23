@@ -140,13 +140,13 @@ static void * dir_open(void * m, const char * name, int mode)
 static s64_t dir_read(void * f, void * buf, s64_t size)
 {
 	FILE * fh = (FILE *)f;
-	return fread(buf, size, 1, fh);
+	return fread(buf, 1, size, fh);
 }
 
 static s64_t dir_write(void * f, void * buf, s64_t size)
 {
 	FILE * fh = (FILE *)f;
-	return fwrite(buf, size, 1, fh);
+	return fwrite(buf, 1, size, fh);
 }
 
 static s64_t dir_seek(void * f, s64_t offset)

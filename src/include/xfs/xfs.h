@@ -41,7 +41,7 @@ s64_t xfs_seek(struct xfs_file_t * file, s64_t offset);
 s64_t xfs_length(struct xfs_file_t * file);
 void xfs_close(struct xfs_file_t * file);
 
-struct xfs_context_t * __xfs_alloc(void);
+struct xfs_context_t * __xfs_alloc(const char * path);
 void __xfs_free(struct xfs_context_t * ctx);
 
 #ifdef __cplusplus

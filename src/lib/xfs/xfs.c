@@ -243,7 +243,17 @@ void xfs_close(struct xfs_file_t * file)
 	}
 }
 
-struct xfs_context_t * __xfs_alloc(void)
+static void xfs_init(struct xfs_context_t * ctx, const char * path)
+{
+	char buf[MAX_PATH];
+
+	if(!path || vfs_path_conv(path, buf) < 0)
+		return;
+	xfs_mount(ctx, "/romdisk/framework");
+	xfs_mount(ctx, buf);
+}
+
+struct xfs_context_t * __xfs_alloc(const char * path)
 {
 	struct xfs_context_t * ctx;
 
@@ -254,6 +264,8 @@ struct xfs_context_t * __xfs_alloc(void)
 
 	init_list_head(&ctx->mounts.list);
 	spin_lock_init(&ctx->lock);
+	xfs_init(ctx, path);
+
 	return ctx;
 }
 
@@ -264,30 +276,5 @@ void __xfs_free(struct xfs_context_t * ctx)
 	if(pctx)
 	{
 		free(pctx);
-	}
-}
-
-static char * __xfs_platform_absolute_path(const char * path)
-{
-	char buf[MAX_PATH];
-	char * ret;
-
-	if(vfs_path_conv(path, buf) == 0)
-		ret = strdup(buf);
-	else
-		ret = strdup("/");
-	return ret;
-}
-
-void __xfs_init(struct xfs_context_t * ctx, const char * path)
-{
-	char * p;
-
-	if(path)
-	{
-		p = __xfs_platform_absolute_path(path);
-		xfs_mount(ctx, "/romdisk/framework");
-		xfs_mount(ctx, p);
-		free(p);
 	}
 }
